@@ -18,6 +18,7 @@ import com.recrutplus.recrutplus.repository.JobOfferRepository;
 import com.recrutplus.recrutplus.repository.UserRepository;
 import com.recrutplus.recrutplus.service.interfaces.IApplicationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 @RequiredArgsConstructor
@@ -40,8 +46,18 @@ public class ApplicationService implements IApplicationService {
     private final InterviewRepository interviewRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${app.upload.dir}")
+    private String uploadDir;
+
     @Override
     public ApplicationDTO submitApplication(CreateApplicationDTO createApplicationDTO, MultipartFile cv) {
+        if (cv == null || cv.isEmpty()) {
+            throw new RuntimeException("Le CV est obligatoire");
+        }
+        if (!cv.getContentType().equals("application/pdf")) {
+            throw new RuntimeException("Seuls les fichiers PDF sont acceptés pour le CV");
+        }
+
         JobOffer jobOffer = jobOfferRepository.findById(createApplicationDTO.getJobOfferId())
                 .orElseThrow(() -> new RuntimeException("Offre d'emploi non trouvée"));
 
@@ -100,8 +116,33 @@ public class ApplicationService implements IApplicationService {
 
         Application savedApplication = applicationRepository.save(application);
 
+        try {
+            String cvPath = saveCV(savedApplication.getId(), cv);
+            savedApplication.setCvPath(cvPath);
+            savedApplication = applicationRepository.save(savedApplication);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de l'upload du CV: " + e.getMessage());
+        }
+
         return mapToApplicationDTO(savedApplication);
     }
+
+    private String saveCV(Long applicationId, MultipartFile cv) throws IOException {
+        Path uploadPath = Paths.get(uploadDir);
+        Path absoluteUploadPath = uploadPath.toAbsolutePath();
+
+        if (!Files.exists(absoluteUploadPath)) {
+            Files.createDirectories(absoluteUploadPath);
+        }
+
+        String fileName = "application_" + applicationId + "_cv.pdf";
+        Path filePath = absoluteUploadPath.resolve(fileName);
+
+        cv.transferTo(filePath.toFile());
+
+        return uploadDir + "/" + fileName;
+    }
+
 
     @Override
     public ApplicationDTO getApplicationById(Long id) {

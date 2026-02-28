@@ -67,6 +67,6 @@ public class Application {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
-    private List<Interview> interviews;
+
+
 }
