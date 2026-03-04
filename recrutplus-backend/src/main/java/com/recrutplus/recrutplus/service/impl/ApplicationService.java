@@ -18,6 +18,7 @@ import com.recrutplus.recrutplus.repository.JobOfferRepository;
 import com.recrutplus.recrutplus.repository.UserRepository;
 import com.recrutplus.recrutplus.service.interfaces.IApplicationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 @RequiredArgsConstructor
@@ -39,9 +46,20 @@ public class ApplicationService implements IApplicationService {
     private final UserRepository userRepository;
     private final InterviewRepository interviewRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+
+    @Value("${app.upload.dir}")
+    private String uploadDir;
 
     @Override
     public ApplicationDTO submitApplication(CreateApplicationDTO createApplicationDTO, MultipartFile cv) {
+        if (cv == null || cv.isEmpty()) {
+            throw new RuntimeException("Le CV est obligatoire");
+        }
+        if (!cv.getContentType().equals("application/pdf")) {
+            throw new RuntimeException("Seuls les fichiers PDF sont acceptés pour le CV");
+        }
+
         JobOffer jobOffer = jobOfferRepository.findById(createApplicationDTO.getJobOfferId())
                 .orElseThrow(() -> new RuntimeException("Offre d'emploi non trouvée"));
 
@@ -100,7 +118,73 @@ public class ApplicationService implements IApplicationService {
 
         Application savedApplication = applicationRepository.save(application);
 
-        return mapToApplicationDTO(savedApplication);
+        try {
+            String cvPath = saveCV(savedApplication.getId(), cv);
+            savedApplication.setCvPath(cvPath);
+            savedApplication = applicationRepository.save(savedApplication);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de l'upload du CV: " + e.getMessage());
+        }
+
+        final Application finalSavedApplication = savedApplication;
+        final JobOffer finalJobOffer = jobOffer;
+        final User finalUser = user;
+        final String finalAccessCode = accessCode;
+        final boolean finalIsNewUser = isNewUser;
+
+        try {
+            emailService.sendApplicationConfirmation(
+                    finalSavedApplication.getEmail(),
+                    finalSavedApplication.getFirstname() + " " + finalSavedApplication.getLastname(),
+                    finalJobOffer.getTitle()
+            );
+        } catch (Exception emailError) {
+            System.err.println("Erreur envoi email confirmation: " + emailError.getMessage());
+        }
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                if (finalIsNewUser && finalAccessCode != null) {
+                    Thread.sleep(10000);
+                    emailService.sendAccessCode(
+                            finalUser.getEmail(),
+                            finalUser.getFirstname() + " " + finalUser.getLastname(),
+                            finalAccessCode
+                    );
+                    System.out.println("Email code d'accès envoyé en arrière-plan");
+                }
+
+                Thread.sleep(10000);
+                emailService.sendNewApplicationNotification(
+                        "rh@recrutplus.com",
+                        finalSavedApplication.getFirstname() + " " + finalSavedApplication.getLastname(),
+                        finalJobOffer.getTitle(),
+                        finalSavedApplication.getId()
+                );
+                System.out.println("Email notification RH envoyé en arrière-plan");
+
+            } catch (Exception e) {
+                System.err.println("Erreur envoi emails async: " + e.getMessage());
+            }
+        });
+
+        return mapToApplicationDTO(finalSavedApplication);
+    }
+
+    private String saveCV(Long applicationId, MultipartFile cv) throws IOException {
+        Path uploadPath = Paths.get(uploadDir);
+        Path absoluteUploadPath = uploadPath.toAbsolutePath();
+
+        if (!Files.exists(absoluteUploadPath)) {
+            Files.createDirectories(absoluteUploadPath);
+        }
+
+        String fileName = "application_" + applicationId + "_cv.pdf";
+        Path filePath = absoluteUploadPath.resolve(fileName);
+
+        cv.transferTo(filePath.toFile());
+
+        return uploadDir + "/" + fileName;
     }
 
     @Override
@@ -198,6 +282,24 @@ public class ApplicationService implements IApplicationService {
         application.setUpdatedAt(LocalDateTime.now());
 
         Application updatedApplication = applicationRepository.save(application);
+
+        if (newStatus != ApplicationStatus.ACCEPTE_ENTRETIEN) {
+            CompletableFuture.runAsync(() -> {
+                try {
+                    emailService.sendStatusChange(
+                            application.getEmail(),
+                            application.getFirstname() + " " + application.getLastname(),
+                            application.getJobOffer().getTitle(),
+                            newStatus,
+                            processApplicationDTO.getComment()
+                    );
+                    System.out.println("Email changement statut envoyé en arrière-plan");
+                } catch (Exception emailError) {
+                    System.err.println("Erreur envoi email changement statut: " + emailError.getMessage());
+                }
+            });
+        }
+
         return mapToApplicationDTO(updatedApplication);
     }
 

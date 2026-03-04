@@ -3,7 +3,7 @@ import type { JobOffer, CreateJobOfferDTO, UpdateJobOfferDTO, Specialty, Contrac
 
 const jobOfferService = {
   getAll: async (): Promise<JobOffer[]> => {
-    const response = await api.get<JobOffer[]>('/job-offers');
+    const response = await api.get<JobOffer[]>('/job-offers/all');
     return response.data;
   },
 
@@ -43,7 +43,7 @@ const jobOfferService = {
   },
 
   create: async (data: CreateJobOfferDTO): Promise<JobOffer> => {
-    const response = await api.post<JobOffer>('/job-offers', data);
+    const response = await api.post<JobOffer>('/job-offers/create', data);
     return response.data;
   },
 

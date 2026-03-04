@@ -14,7 +14,7 @@ const userService = {
 
   getAll: async (role?: string): Promise<User[]> => {
     const params = role ? `?role=${role}` : '';
-    const response = await api.get<User[]>(`/users${params}`);
+    const response = await api.get<User[]>(`/users/all${params}`);
     return response.data;
   },
 
@@ -24,7 +24,7 @@ const userService = {
   },
 
   create: async (data: CreateUserDTO): Promise<User> => {
-    const response = await api.post<User>('/users', data);
+    const response = await api.post<User>('/users/create', data);
     return response.data;
   },
 
@@ -38,7 +38,7 @@ const userService = {
   },
 
   toggleStatus: async (id: number, isActive: boolean): Promise<User> => {
-    const response = await api.patch<User>(`/users/${id}/status`, { isActive });
+    const response = await api.patch<User>(`/users/${id}/toggle-status?isActive=${isActive}`);
     return response.data;
   }
 };

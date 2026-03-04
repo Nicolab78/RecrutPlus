@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +31,7 @@ public class InterviewService implements IInterviewService {
 
     private final InterviewRepository interviewRepository;
     private final ApplicationRepository applicationRepository;
+    private final EmailService emailService;
 
     @Override
     public InterviewDTO createInterview(CreateInterviewDTO dto) {
@@ -78,6 +81,31 @@ public class InterviewService implements IInterviewService {
                 .build();
 
         Interview saved = interviewRepository.save(interview);
+
+        final Interview finalInterview = saved;
+        final Application finalApplication = application;
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                Thread.sleep(5000);
+                String interviewDateFormatted = saved.getInterviewDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm"));
+
+                emailService.sendInterviewInvitation(
+                        finalApplication.getEmail(),
+                        finalApplication.getFirstname() + " " + finalApplication.getLastname(),
+                        finalApplication.getJobOffer().getTitle(),
+                        interviewDateFormatted,
+                        finalInterview.getType().toString(),
+                        finalInterview.getVisioLink(),
+                        finalInterview.getNotes()
+                );
+
+                System.out.println("Email invitation entretien envoyé en arrière-plan à : " + finalApplication.getEmail());
+            } catch (Exception e) {
+                System.err.println("Erreur envoi email invitation entretien: " + e.getMessage());
+            }
+        });
+
         return mapToInterviewDTO(saved);
     }
 
@@ -138,7 +166,13 @@ public class InterviewService implements IInterviewService {
                 interview.setAddress(mapToAddress(dto.getAddress()));
             }
         }
+
+        if (dto.getNotes() != null) {
+            interview.setNotes(dto.getNotes());
+        }
+
         if (dto.getStatus() != null) {
+            InterviewStatus oldStatus = interview.getStatus();
             interview.setStatus(dto.getStatus());
 
             if (dto.getStatus() == InterviewStatus.TERMINE) {
@@ -150,28 +184,67 @@ public class InterviewService implements IInterviewService {
                     application.setUpdatedAt(LocalDateTime.now());
                     applicationRepository.save(application);
                 }
+
+                final Interview finalInterviewTermine = interview;
+                final String customNotes = dto.getNotes();
+
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        Thread.sleep(10000);
+                        String interviewDateFormatted = finalInterviewTermine.getInterviewDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm"));
+
+                        String message = customNotes != null && !customNotes.trim().isEmpty()
+                                ? customNotes
+                                : "Votre entretien du " + interviewDateFormatted + " s'est bien déroulé. Nous reviendrons vers vous prochainement avec notre décision.";
+
+                        emailService.sendStatusChange(
+                                finalInterviewTermine.getApplication().getEmail(),
+                                finalInterviewTermine.getApplication().getFirstname() + " " + finalInterviewTermine.getApplication().getLastname(),
+                                finalInterviewTermine.getApplication().getJobOffer().getTitle(),
+                                ApplicationStatus.ENTRETIEN_TERMINE,
+                                message
+                        );
+
+                        System.out.println("Email entretien terminé envoyé à : " + finalInterviewTermine.getApplication().getEmail());
+                    } catch (Exception e) {
+                        System.err.println("Erreur envoi email entretien terminé: " + e.getMessage());
+                    }
+                });
             }
-        }
-        if (dto.getNotes() != null) {
-            interview.setNotes(dto.getNotes());
+
+            if (dto.getStatus() == InterviewStatus.ANNULE && oldStatus != InterviewStatus.ANNULE) {
+                final Interview finalInterview = interview;
+                final String customReason = dto.getNotes();
+
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        Thread.sleep(10000);
+                        String interviewDateFormatted = finalInterview.getInterviewDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm"));
+
+                        String reason = customReason != null && !customReason.trim().isEmpty()
+                                ? customReason
+                                : "Nous nous excusons pour ce contretemps.";
+
+                        emailService.sendInterviewCancellation(
+                                finalInterview.getApplication().getEmail(),
+                                finalInterview.getApplication().getFirstname() + " " + finalInterview.getApplication().getLastname(),
+                                finalInterview.getApplication().getJobOffer().getTitle(),
+                                interviewDateFormatted,
+                                reason
+                        );
+
+                        System.out.println("Email annulation entretien envoyé via update à : " + finalInterview.getApplication().getEmail());
+                    } catch (Exception e) {
+                        System.err.println("Erreur envoi email annulation entretien: " + e.getMessage());
+                    }
+                });
+            }
         }
 
         interview.setUpdatedAt(LocalDateTime.now());
 
         Interview updated = interviewRepository.save(interview);
         return mapToInterviewDTO(updated);
-    }
-
-    @Override
-    public void cancelInterview(Long id) {
-        Interview interview = interviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Entretien non trouvé"));
-
-        interview.setStatus(InterviewStatus.ANNULE);
-        interview.setCancelledAt(LocalDateTime.now());
-        interview.setUpdatedAt(LocalDateTime.now());
-
-        interviewRepository.save(interview);
     }
 
     private InterviewDTO mapToInterviewDTO(Interview interview) {

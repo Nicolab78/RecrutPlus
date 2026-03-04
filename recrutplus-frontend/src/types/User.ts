@@ -28,7 +28,6 @@ export interface CreateUserDTO {
   phone: string;
   birthdate?: string;
   role: UserRole;
-  password: string;
   address?: Address;
   isActive?: boolean;
 }

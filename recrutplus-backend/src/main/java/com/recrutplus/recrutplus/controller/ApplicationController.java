@@ -1,6 +1,8 @@
 package com.recrutplus.recrutplus.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recrutplus.recrutplus.dto.application.*;
 import com.recrutplus.recrutplus.model.enums.ApplicationStatus;
 import com.recrutplus.recrutplus.service.impl.ApplicationService;
@@ -23,16 +25,24 @@ import java.util.List;
 public class ApplicationController {
 
     private final ApplicationService applicationService;
+    private final ObjectMapper objectMapper;
 
     @PostMapping("/submit")
     public ResponseEntity<?> submitApplication(
-            @Valid @RequestBody CreateApplicationDTO createApplicationDTO,
-            @RequestParam(value = "cv", required = false) MultipartFile cv) {
+            @RequestParam("data") String applicationData,
+            @RequestParam("cv") MultipartFile cv) {
+
         try {
+            CreateApplicationDTO createApplicationDTO = objectMapper.readValue(applicationData, CreateApplicationDTO.class);
             ApplicationDTO application = applicationService.submitApplication(createApplicationDTO, cv);
             return ResponseEntity.status(HttpStatus.CREATED).body(application);
+
+        } catch (JsonProcessingException e) {
+            return new ResponseEntity<>("Erreur format JSON: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Erreur interne", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

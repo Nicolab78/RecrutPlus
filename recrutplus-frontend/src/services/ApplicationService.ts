@@ -2,25 +2,22 @@ import api from './api';
 import type { Application, CreateApplicationDTO, UpdateApplicationDTO, ProcessApplicationDTO, ApplicationStatus } from '../types/Application';
 
 const applicationService = {
-  submit: async (data: CreateApplicationDTO, cv?: File): Promise<Application> => {
-    const response = await api.post<Application>('/applications/submit', data);
-    return response.data;
-    
-    /* À réactiver plus tard quand le CV sera géré :
-    const formData = new FormData();
-    formData.append('data', JSON.stringify(data));
-    if (cv) {
-      formData.append('cv', cv);
-    }
+  submit: async (data: CreateApplicationDTO, cv: File): Promise<Application> => {
+  const formData = new FormData();
+  formData.append('data', JSON.stringify(data));
+  formData.append('cv', cv);
 
-    const response = await api.post<Application>('/applications/submit', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-    return response.data;
-    */
-  },
+  const response = await api.post<Application>('/applications/submit', formData);
+  
+  return response.data;
+},
+
+downloadCV: async (applicationId: number): Promise<Blob> => {
+  const response = await api.get(`/documents/download/${applicationId}`, {
+    responseType: 'blob'
+  });
+  return response.data;
+},
 
   getById: async (id: number): Promise<Application> => {
     const response = await api.get<Application>(`/applications/${id}`);

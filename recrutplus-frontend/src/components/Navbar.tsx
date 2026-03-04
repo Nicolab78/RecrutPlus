@@ -47,9 +47,10 @@ const Navbar: React.FC = () => {
                   Accueil
                 </Link>
 
-                {(user?.role === UserRole.RH || user?.role === UserRole.ADMIN) && (
+                {/* RH : toutes les fonctionnalités */}
+                {user?.role === UserRole.RH && (
                   <>
-                    <Link to="/job-offers" className="navbar-link">
+                    <Link to="/job-offers-management" className="navbar-link">
                       Offres d'emploi
                     </Link>
                     <Link to="/applications" className="navbar-link">
@@ -61,12 +62,19 @@ const Navbar: React.FC = () => {
                   </>
                 )}
 
+                {/* ADMIN : seulement gestion offres et utilisateurs */}
                 {user?.role === UserRole.ADMIN && (
-                  <Link to="/users" className="navbar-link">
-                    Utilisateurs
-                  </Link>
+                  <>
+                    <Link to="/job-offers-management" className="navbar-link">
+                      Offres d'emploi
+                    </Link>
+                    <Link to="/users" className="navbar-link">
+                      Utilisateurs
+                    </Link>
+                  </>
                 )}
 
+                {/* CANDIDAT : recherche et ses candidatures/entretiens */}
                 {user?.role === UserRole.CANDIDAT && (
                   <>
                     <Link to="/job-offers" className="navbar-link">

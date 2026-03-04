@@ -73,8 +73,28 @@ const ApplicationDetailPage: React.FC = () => {
       setCompletedInterviews(completed);
       setPendingInterviews(pending);
     } catch (err) {
-
       console.error('Erreur lors du chargement des entretiens:', err);
+    }
+  };
+
+  // ✅ NOUVELLE FONCTION pour télécharger le CV
+  const handleDownloadCV = async () => {
+    try {
+      if (!application) return;
+      
+      const blob = await applicationService.downloadCV(application.id);
+      
+      // Créer un lien de téléchargement
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `CV_${application.firstname}_${application.lastname}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err: any) {
+      setError('Erreur lors du téléchargement du CV');
     }
   };
 
@@ -475,6 +495,25 @@ const ApplicationDetailPage: React.FC = () => {
                 <p>{application.coverLetter}</p>
               </div>
             </div>
+
+            {/* ✅ NOUVELLE SECTION CV */}
+            {application.cvPath && (
+              <div className="info-card">
+                <h2 className="card-title">
+                  <span className="card-icon">📄</span>
+                  CV
+                </h2>
+                <div className="cv-section">
+                  <p className="cv-info">CV téléchargé le {formatDate(application.applicationDate)}</p>
+                  <button 
+                    onClick={handleDownloadCV}
+                    className="btn-download"
+                  >
+                    📥 Télécharger le CV
+                  </button>
+                </div>
+              </div>
+            )}
 
             {application.comment && (
               <div className="info-card">
