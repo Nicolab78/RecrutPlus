@@ -419,3 +419,31 @@
     gap: 0.25rem;
   }
 }
+
+.cv-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cv-info {
+  color: #6b7280;
+  margin: 0;
+}
+
+.btn-download {
+  background-color: #059669;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-download:hover {
+  background-color: #047857;
+}

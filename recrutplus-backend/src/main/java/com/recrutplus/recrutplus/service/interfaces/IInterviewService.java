@@ -16,6 +16,5 @@ public interface IInterviewService {
 
     InterviewDTO updateInterview(Long id, UpdateInterviewDTO updateInterviewDTO);
 
-    void cancelInterview(Long id);
 
 }

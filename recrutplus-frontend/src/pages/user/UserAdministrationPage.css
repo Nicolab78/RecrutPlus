@@ -1,4 +1,6 @@
-.interview-list-page {
+/* UserAdministrationPage.css */
+
+.user-administration-page {
   min-height: 100vh;
   background-color: hsl(0, 0%, 96%);
   border-radius: 8px;
@@ -16,14 +18,14 @@
   margin-bottom: 2rem;
 }
 
-.header h1 {
+.header-content h1 {
   font-size: 1.875rem;
   font-weight: bold;
   color: #111827;
   margin: 0 0 0.5rem 0;
 }
 
-.header p {
+.header-content p {
   color: #6b7280;
   margin: 0;
 }
@@ -128,62 +130,56 @@
   color: #9ca3af;
 }
 
-.form-textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-.interviews-section {
+/* Users Section */
+.users-section {
   background: white;
-  border-radius: 4px;                 
+  border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ddd;              
-  padding: 1.5rem;                      
+  border: 1px solid #ddd;
+  padding: 1.5rem;
 }
 
-.interview-section-header {
+.user-section-header {
   padding: 1rem 1.5rem;
   border-bottom: 1px solid #e5e7eb;
 }
 
-.interview-section-header h3 {
+.user-section-header h3 {
   font-size: 1.125rem;
   font-weight: 500;
   color: black;
   margin: 0;
 }
 
-.interviews-list {
+.users-list {
   divide-y: 1px solid #e5e7eb;
 }
 
-.interview-item {
+.user-item {
   padding: 1.5rem;
   transition: background-color 0.2s;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.interview-item:hover {
+.user-item:last-child {
+  border-bottom: none;
+}
+
+.user-item:hover {
   background-color: #f9fafb;
 }
 
-.interview-item.past-due {
-  background-color: #fef3c7;
-}
-
-.interview-header {
+.user-header {
   display: flex;
-  align-items: flex-start;  /* Pas center, sinon ça va tout décaler */
+  align-items: flex-start;
   justify-content: space-between;
 }
 
-.interview-content {
+.user-content {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  position: relative;
 }
 
-.interview-title {
+.user-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -191,7 +187,7 @@
   gap: 1rem;
 }
 
-.interview-title h4 {
+.user-title h4 {
   font-size: 1.125rem;
   font-weight: 600;
   color: #111827;
@@ -205,10 +201,9 @@
   flex-shrink: 0;
 }
 
-/* Status and Type Badges */
-.status-badge,
-.type-badge,
-.past-due-badge {
+/* Role and Status Badges */
+.role-badge,
+.status-badge {
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.75rem;
@@ -218,43 +213,37 @@
   border: 1px solid;
 }
 
-.status-planned {
-  background-color: #dbeafe;
-  color: #1e40af;
-  border-color: #60a5fa;
-}
-
-.status-completed {
-  background-color: #dcfce7;
-  color: #166534;
-  border-color: #4ade80;
-}
-
-.status-cancelled {
+.role-admin {
   background-color: #fee2e2;
   color: #991b1b;
   border-color: #f87171;
 }
 
-.type-visio {
-  background-color: #f3e8ff;
-  color: #7c2d12;
-  border-color: #c084fc;
+.role-rh {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border-color: #60a5fa;
 }
 
-.type-onsite {
+.role-candidat {
+  background-color: #dcfce7;
+  color: #166534;
+  border-color: #4ade80;
+}
+
+.status-active {
+  background-color: #d1fae5;
+  color: #065f46;
+  border-color: #34d399;
+}
+
+.status-inactive {
   background-color: #f3f4f6;
   color: #374151;
   border-color: #9ca3af;
 }
 
-.past-due-badge {
-  background-color: #fef3c7;
-  color: #92400e;
-  border-color: #fbbf24;
-}
-
-.interview-list-details {
+.user-list-details {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr auto;
   gap: 1rem;
@@ -275,39 +264,72 @@
   color: #374151;
 }
 
-.visio-link-container,
-.notes-container {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin-bottom: 0.5rem;
-}
-
-.visio-link-text {
-  color: #374151;
-  font-size: 0.875rem;
-  margin-left: 0.25rem;
-  word-break: break-all;
-}
-
-.interview-actions {
+.user-actions {
   display: flex;
   align-items: flex-end;
 }
 
-.btn-modify {
-  background-color: #6366f1;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
+.actions-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
-.btn-modify:hover {
-  background-color: #4f46e5;
+.btn-small {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.btn-secondary {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.btn-secondary:hover {
+  background-color: #d1d5db;
+  color: #374151;
+  text-decoration: none;
+}
+
+.btn-success {
+  background-color: #16a34a;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #15803d;
+  color: white;
+  text-decoration: none;
+}
+
+.btn-danger {
+  background-color: #dc2626;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #b91c1c;
+  color: white;
+  text-decoration: none;
+}
+
+.user-stats {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.stat-text {
+  font-size: 0.75rem;
+  color: #6b7280;
 }
 
 /* Modal */
@@ -330,7 +352,7 @@
   border-radius: 8px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   padding: 1.5rem;
   margin: 1rem;
 }
@@ -373,6 +395,20 @@
   margin-bottom: 1.5rem;
 }
 
+.role-info {
+  margin-top: 0.5rem;
+}
+
+.info-text {
+  font-size: 0.875rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background-color: #f0f9ff;
+  border: 1px solid #e0f2fe;
+  color: #0c4a6e;
+  margin: 0;
+}
+
 .modal-actions {
   display: flex;
   gap: 0.75rem;
@@ -399,7 +435,7 @@
   cursor: not-allowed;
 }
 
-.btn-secondary {
+.modal-actions .btn-secondary {
   flex: 1;
   background-color: #e5e7eb;
   color: #374151;
@@ -411,8 +447,46 @@
   transition: background-color 0.2s;
 }
 
-.btn-secondary:hover {
+.modal-actions .btn-secondary:hover {
   background-color: #d1d5db;
+}
+
+.modal-actions .btn-success {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.modal-actions .btn-success:hover:not(:disabled) {
+  background-color: #15803d;
+}
+
+.modal-actions .btn-success:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-actions .btn-danger {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.modal-actions .btn-danger:hover:not(:disabled) {
+  background-color: #b91c1c;
+}
+
+.modal-actions .btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Empty State */
@@ -497,30 +571,28 @@
     grid-template-columns: 1fr;
   }
   
-  .interview-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-  
-  .interview-actions {
-    margin-left: 0;
-    width: 100%;
-  }
-  
-  .btn-modify {
-    width: 100%;
-  }
-  
-  .interview-details {
+  .user-list-details {
     grid-template-columns: 1fr;
     gap: 0.5rem;
   }
   
-  .interview-title {
+  .actions-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-small {
+    width: 100%;
+  }
+  
+  .user-title {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
+  }
+  
+  .modal-content {
+    max-width: 300px;
   }
 }
 
@@ -534,8 +606,18 @@
     align-items: flex-start;
     gap: 0.25rem;
   }
-  
-  .modal-actions {
-    flex-direction: column;
-  }
+}
+
+.access-code-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f0f9ff;
+  border-left: 4px solid #3b82f6;
+  border-radius: 4px;
+}
+
+.access-code-info .info-text {
+  margin: 0;
+  color: #1e40af;
+  font-size: 0.875rem;
 }
