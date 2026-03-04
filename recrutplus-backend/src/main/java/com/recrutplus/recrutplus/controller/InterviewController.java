@@ -72,14 +72,5 @@ public class InterviewController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> cancelInterview(@PathVariable Long id) {
-        try {
-            interviewService.cancelInterview(id);
-            return ResponseEntity.ok("Entretien annulé avec succès");
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
 
 }

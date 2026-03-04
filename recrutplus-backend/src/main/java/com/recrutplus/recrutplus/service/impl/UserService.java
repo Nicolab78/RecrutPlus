@@ -11,11 +11,14 @@ import com.recrutplus.recrutplus.model.enums.UserRole;
 import com.recrutplus.recrutplus.repository.UserRepository;
 import com.recrutplus.recrutplus.service.interfaces.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +27,8 @@ import java.util.stream.Collectors;
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Override
     public UserDTO getProfile(String email) {
@@ -93,6 +98,8 @@ public class UserService implements IUserService {
             throw new RuntimeException("Cet email est déjà utilisé");
         }
 
+        String accessCode = generateAccessCode();
+
         User user = User.builder()
                 .firstname(createUserDTO.getFirstname())
                 .lastname(createUserDTO.getLastname())
@@ -100,15 +107,46 @@ public class UserService implements IUserService {
                 .phone(createUserDTO.getPhone())
                 .birthdate(createUserDTO.getBirthdate())
                 .role(createUserDTO.getRole())
-                .password((createUserDTO.getPassword()))
+                .password(passwordEncoder.encode(accessCode))
+                .accessCode(accessCode)
+                .codeExpiration(LocalDateTime.now().plusDays(30))
                 .address(mapToAddress(createUserDTO.getAddress()))
-                .isActive(createUserDTO.getIsActive() != null ? createUserDTO.getIsActive() : true)
-                .mustChangePassword(false)
+                .isActive(true)
+                .mustChangePassword(true)
                 .createdAt(LocalDateTime.now())
                 .build();
 
         User savedUser = userRepository.save(user);
+
+        final String finalAccessCode = accessCode;
+        final User finalSavedUser = savedUser;
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                emailService.sendAccessCode(
+                        finalSavedUser.getEmail(),
+                        finalSavedUser.getFirstname() + " " + finalSavedUser.getLastname(),
+                        finalAccessCode
+                );
+                System.out.println("Email code d'accès utilisateur admin envoyé en arrière-plan à : " + finalSavedUser.getEmail());
+            } catch (Exception e) {
+                System.err.println("Erreur envoi email code d'accès admin: " + e.getMessage());
+            }
+        });
+
         return mapToUserDTO(savedUser);
+    }
+
+    private String generateAccessCode() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuilder code = new StringBuilder();
+
+        for (int i = 0; i < 8; i++) {
+            code.append(characters.charAt(random.nextInt(characters.length())));
+        }
+
+        return code.toString();
     }
 
     @Override

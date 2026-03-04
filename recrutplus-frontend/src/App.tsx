@@ -16,6 +16,8 @@ import Profile from './pages/profile/Profile';
 import MyApplicationsPage from './pages/application/MyApplicationsPage';
 import MyInterviewsPage from './pages/interview/MyInterviewsPage';
 import Footer from './components/Footer';
+import UserAdministrationPage from './pages/user/UserAdministrationPage';
+import JobOffersManagementPage from './pages/joboffer/JobOffersManagementPage';
 
 function App() {
   return (
@@ -57,9 +59,9 @@ function App() {
           <Route
             path="/job-offers-management"
             element={
-              <ProtectedRoute allowedRoles={[UserRole.RH, UserRole.ADMIN]}>
-                <div>Job Offers Management</div>
-              </ProtectedRoute>
+            <ProtectedRoute allowedRoles={[UserRole.RH, UserRole.ADMIN]}>
+              <JobOffersManagementPage />
+            </ProtectedRoute>
             }
           />
 
@@ -97,7 +99,7 @@ function App() {
             path="/users"
             element={
               <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
-                <div>Users Management</div>
+                <UserAdministrationPage />
               </ProtectedRoute>
             }
           />

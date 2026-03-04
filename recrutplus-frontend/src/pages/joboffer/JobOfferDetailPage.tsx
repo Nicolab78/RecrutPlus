@@ -21,6 +21,8 @@ const JobOfferDetailPage: React.FC = () => {
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
+  const [cvFile, setCvFile] = useState<File | null>(null);
+
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -84,6 +86,22 @@ const JobOfferDetailPage: React.FC = () => {
     }));
   };
 
+  const handleCvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        setSubmitError('Seuls les fichiers PDF sont acceptés');
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        setSubmitError('Le fichier ne peut pas dépasser 10MB');
+        return;
+      }
+      setCvFile(file);
+      setSubmitError('');
+    }
+  };
+
   const handleSubmitApplication = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError('');
@@ -91,6 +109,11 @@ const JobOfferDetailPage: React.FC = () => {
 
     try {
       if (!offer) return;
+      if (!cvFile) {
+        setSubmitError('Le CV est obligatoire');
+        setIsSubmitting(false);
+        return;
+      }
 
       const applicationData: CreateApplicationDTO = {
         jobOfferId: offer.id,
@@ -102,8 +125,7 @@ const JobOfferDetailPage: React.FC = () => {
         address: formData.address.city ? formData.address : undefined,
         coverLetter: formData.coverLetter
       };
-
-      await applicationService.submit(applicationData);
+      await applicationService.submit(applicationData, cvFile);
 
       setSubmitSuccess(true);
       setTimeout(() => {
@@ -289,7 +311,7 @@ const JobOfferDetailPage: React.FC = () => {
               </div>
 
               <div className="form-section">
-                <h3 className="form-section-title">Adresse</h3>
+                <h3 className="form-section-title">📍 Adresse</h3>
                 <div className="form-grid">
                   <div className="form-group">
                     <label htmlFor="number">Numéro</label>
@@ -353,8 +375,28 @@ const JobOfferDetailPage: React.FC = () => {
                 </div>
               </div>
 
+              {/* ✅ NOUVELLE SECTION CV */}
               <div className="form-section">
-                <h3 className="form-section-title">Lettre de motivation</h3>
+                <h3 className="form-section-title">📄 CV (obligatoire)</h3>
+                <div className="form-group">
+                  <label htmlFor="cv">CV au format PDF *</label>
+                  <input
+                    type="file"
+                    id="cv"
+                    name="cv"
+                    required
+                    accept="application/pdf,.pdf"
+                    onChange={handleCvChange}
+                    className="form-input"
+                  />
+                  {cvFile && (
+                    <p className="file-info">✅ Fichier sélectionné: {cvFile.name}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3 className="form-section-title">💬 Lettre de motivation</h3>
                 <div className="form-group">
                   <textarea
                     id="coverLetter"
@@ -364,7 +406,7 @@ const JobOfferDetailPage: React.FC = () => {
                     value={formData.coverLetter}
                     onChange={handleInputChange}
                     className="form-textarea"
-                  
+                    placeholder="Expliquez pourquoi vous souhaitez ce poste..."
                   />
                 </div>
               </div>
