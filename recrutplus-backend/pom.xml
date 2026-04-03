@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.recrutplus</groupId>
-	<artifactId>recrutplus</artifactId>
+	<artifactId>recrutplus-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>recrutplus</name>
 	<description>Application de recrutement pour les entreprises</description>
@@ -115,6 +115,20 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+        </dependency>
 
 	</dependencies>
 

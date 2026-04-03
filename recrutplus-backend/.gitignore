@@ -35,6 +35,6 @@ build/
 
 # Configuration sensible
 src/main/resources/application.properties
+src/test/resources/application-test.properties
 
 # Dossiers d'upload
-uploads/
