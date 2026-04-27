@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
@@ -54,7 +53,7 @@ function App() {
               </ProtectedRoute>
               }
           />
-          
+
           {/* RH/ADMIN routes */}
           <Route
             path="/job-offers-management"
@@ -74,7 +73,7 @@ function App() {
             }
           />
 
-          <Route 
+          <Route
             path="/application/:id"
             element={
               <ProtectedRoute allowedRoles={[UserRole.RH, UserRole.ADMIN]}>
