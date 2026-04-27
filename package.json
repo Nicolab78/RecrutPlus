@@ -1,0 +1,30 @@
+{
+  "name": "projet-bachelor-recrutplus",
+  "version": "1.0.0",
+  "description": "RecrutPlus is a recruitment management web application.   It allows companies to post job offers, manage applications, and candidates to apply easily.",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "exit 0",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nicolab78/RecrutPlus.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Nicolab78/RecrutPlus/issues"
+  },
+  "homepage": "https://github.com/Nicolab78/RecrutPlus#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.2",
+    "@commitlint/config-conventional": "^20.5.0",
+    "husky": "^9.1.7"
+  }
+}
