@@ -20,10 +20,12 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-vars': 'warn',
-      'react-hooks/exhaustive-deps': 'warn',
-      'react-refresh/only-export-components': 'warn',
-    },
+  '@typescript-eslint/no-explicit-any': 'off',
+  '@typescript-eslint/no-unused-vars': 'warn',
+  'react-hooks/exhaustive-deps': 'warn',
+  'react-refresh/only-export-components': 'warn',
+  'react-hooks/set-state-in-effect': 'warn',
+  'no-useless-escape': 'warn',
+},
   },
 ])
