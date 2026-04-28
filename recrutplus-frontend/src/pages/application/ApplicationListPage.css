@@ -137,9 +137,9 @@
 .applications-section {
   background: white;
   border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);                    /* Comme dans l'autre fichier */
-  border: 1px solid #ddd;                /* Ajoute la bordure */
-  padding: 1.5rem;                       /* Ajoute le padding */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  padding: 1.5rem;
 }
 
 .application-section-header {
