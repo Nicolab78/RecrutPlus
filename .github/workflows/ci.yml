@@ -93,7 +93,7 @@ jobs:
           images: ghcr.io/nicolab78/recrutplus-backend
           tags: |
             type=ref,event=branch
-            type=sha,prefix={{branch}}-
+            type=sha,prefix=sha-
             type=semver,pattern={{version}}
 
       - name: Métadonnées frontend
@@ -103,7 +103,7 @@ jobs:
           images: ghcr.io/nicolab78/recrutplus-frontend
           tags: |
             type=ref,event=branch
-            type=sha,prefix={{branch}}-
+            type=sha,prefix=sha-
             type=semver,pattern={{version}}
 
       - name: Build et push backend
