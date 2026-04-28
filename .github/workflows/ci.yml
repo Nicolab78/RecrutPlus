@@ -94,7 +94,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=sha,prefix=sha-
-            type=semver,pattern={{version}}
+            type=semver,pattern=v{{version}}
 
       - name: Métadonnées frontend
         id: meta-frontend
@@ -104,7 +104,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=sha,prefix=sha-
-            type=semver,pattern={{version}}
+            type=semver,pattern=v{{version}}
 
       - name: Build et push backend
         uses: docker/build-push-action@v6
