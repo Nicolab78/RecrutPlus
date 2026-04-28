@@ -1,6 +1,7 @@
+![CI](https://github.com/Nicolab78/RecrutPlus/actions/workflows/ci.yml/badge.svg)
 # RecrutPlus
 
-RecrutPlus is a recruitment management web application.  
+RecrutPlus is a recruitment management web application.
 It allows companies to post job offers, manage applications, and candidates to apply easily.
 
 The project consists of two parts:
@@ -37,12 +38,12 @@ Configure the database in `src/main/resources/application.properties`:
    spring.datasource.password=your_password
 ```
 Launch the application:
-   
+
    **Option A - Using Maven wrapper:**
 ```bash
    ./mvnw spring-boot:run
 ```
-   
+
    **Option B - Using Java IDE:**
    - Open the project
    - Click the "Run" button
