@@ -1,5 +1,3 @@
-/* MyInterviewsPage.css */
-
 .my-interviews-page {
   min-height: 100vh;
   background-color: #f5f5f5;
@@ -432,21 +430,21 @@
   .container {
     padding: 0 1rem;
   }
-  
+
   .interview-header {
     flex-direction: column;
     gap: 0.75rem;
   }
-  
+
   .badges {
     align-self: flex-start;
   }
-  
+
   .detail-item {
     flex-direction: column;
     gap: 0.25rem;
   }
-  
+
   .detail-icon {
     margin-top: 0;
   }
@@ -456,7 +454,7 @@
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .badges {
     flex-direction: column;
     gap: 0.25rem;

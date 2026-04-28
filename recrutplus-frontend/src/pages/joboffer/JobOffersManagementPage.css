@@ -1,5 +1,3 @@
-/* JobOffersManagementPage.css */
-
 .job-offers-management-page {
   min-height: 100vh;
   background-color: hsl(0, 0%, 96%);
@@ -515,35 +513,35 @@
   .container {
     padding: 0 1rem;
   }
-  
+
   .header {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .filters-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .job-offer-list-details {
     grid-template-columns: 1fr;
     gap: 0.5rem;
   }
-  
+
   .actions-group {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .btn-small {
     width: 100%;
   }
-  
+
   .job-offer-title {
     flex-direction: column;
     align-items: flex-start;
@@ -555,7 +553,7 @@
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .badges {
     flex-direction: column;
     align-items: flex-start;
