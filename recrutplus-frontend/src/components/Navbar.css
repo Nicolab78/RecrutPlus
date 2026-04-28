@@ -1,0 +1,301 @@
+/* Navbar.css */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid #334155;
+  width: 100%;
+}
+
+.navbar-container {
+  width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 3.25rem;
+  min-height: 3.25rem;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.navbar-brand {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.2s;
+  white-space: nowrap;
+  position: relative;
+}
+
+.navbar-brand:hover {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.navbar-link {
+  color: #e2e8f0;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  position: relative;
+  white-space: nowrap;
+}
+
+.navbar-link:hover {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #ffffff;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.navbar-link:active {
+  transform: translateY(0);
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.navbar-user-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.navbar-profile {
+  color: #e2e8f0;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.navbar-profile:hover {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.navbar-logout-btn {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: #ffffff;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+  white-space: nowrap;
+}
+
+.navbar-logout-btn:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3);
+}
+
+.navbar-logout-btn:active {
+  transform: translateY(0);
+}
+
+.navbar-login {
+  color: #e2e8f0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: 1px solid #475569;
+}
+
+.navbar-login:hover {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #ffffff;
+  text-decoration: none;
+  border-color: #60a5fa;
+}
+
+/* Mobile Menu Button - Version simple sans animation */
+.mobile-menu-button {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  gap: 0.25rem;
+}
+
+.hamburger-line {
+  width: 1.5rem;
+  height: 2px;
+  background-color: #e2e8f0;
+  border-radius: 1px;
+}
+
+/* Mobile Menu - Version simple */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: #1e293b;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #374151;
+  padding: 1rem;
+  gap: 0.5rem;
+  z-index: 50;
+}
+
+.mobile-menu.active {
+  display: flex;
+}
+
+.mobile-menu-link {
+  color: #e2e8f0;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.mobile-menu-link:hover {
+  background-color: #374151;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Responsive Updates - Mobile menu pour CANDIDAT et utilisateurs NON CONNECTÉS */
+@media (max-width: 768px) {
+  /* Cacher le menu desktop pour candidats et utilisateurs non connectés */
+  .navbar[data-user-role="CANDIDAT"] .navbar-menu,
+  .navbar:not([data-user-role]) .navbar-menu {
+    display: none !important;
+  }
+  
+  /* Afficher le bouton hamburger pour candidats et non connectés */
+  .mobile-menu-button {
+    display: flex;
+  }
+  
+  .navbar-user-menu {
+    gap: 0.5rem;
+  }
+  
+  .navbar-profile,
+  .navbar-login {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+  }
+  
+  .navbar-logout-btn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Pour les candidats et non connectés sur très petits écrans */
+  .navbar[data-user-role="CANDIDAT"] .navbar-profile,
+  .navbar:not([data-user-role]) .navbar-login {
+    display: none;
+  }
+  
+  .navbar-logout-btn {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
+/* Style pour les liens actifs (optionnel, à ajouter plus tard avec React Router) */
+.navbar-link.active {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.navbar-link.active::before {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #60a5fa;
+  border-radius: 50%;
+}
+
+/* Animations subtiles */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navbar-menu {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Effet de brillance sur le logo */
+.navbar-brand::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.navbar-brand:hover::after {
+  left: 100%;
+}

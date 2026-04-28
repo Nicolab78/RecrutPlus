@@ -1,0 +1,22 @@
+# Dépendances
+node_modules/
+
+# Environnement
+.env
+.env.local
+*.key
+*.pem
+
+# Builds
+target/
+*.class
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/.DS_Store
+**/.DS_Store
