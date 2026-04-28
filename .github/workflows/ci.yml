@@ -13,6 +13,11 @@ jobs:
 
   test-backend:
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
     steps:
       - uses: actions/checkout@v4
 
