@@ -7,3 +7,22 @@ repos:
       - id: check-yaml
       - id: check-added-large-files
       - id: detect-private-key
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: spotless
+        name: Spotless formatter
+        language: system
+        entry: bash -c 'cd recrutplus-backend && mvn spotless:check'
+        pass_filenames: false
+
+      - id: checkstyle
+        name: Checkstyle
+        language: system
+        entry: bash -c 'cd recrutplus-backend && mvn checkstyle:check'
+        pass_filenames: false
