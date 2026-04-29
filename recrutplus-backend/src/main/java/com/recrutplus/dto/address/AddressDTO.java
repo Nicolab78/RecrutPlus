@@ -7,10 +7,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class AddressDTO {
-    private Long id;
-    private String street;
-    private String number;
-    private String postalCode;
-    private String city;
-    private String country;
+  private Long id;
+  private String street;
+  private String number;
+  private String postalCode;
+  private String city;
+  private String country;
 }

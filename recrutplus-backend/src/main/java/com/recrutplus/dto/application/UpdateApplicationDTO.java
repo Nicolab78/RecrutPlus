@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateApplicationDTO {
 
-    private String firstname;
-    private String lastname;
-    private String email;
-    private String phone;
-    private String coverLetter;
-    private ApplicationStatus status;
-    private String comment;
+  private String firstname;
+  private String lastname;
+  private String email;
+  private String phone;
+  private String coverLetter;
+  private ApplicationStatus status;
+  private String comment;
 }
