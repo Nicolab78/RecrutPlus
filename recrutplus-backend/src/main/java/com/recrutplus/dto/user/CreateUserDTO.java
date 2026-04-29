@@ -2,12 +2,11 @@ package com.recrutplus.dto.user;
 
 import com.recrutplus.dto.address.AddressDTO;
 import com.recrutplus.model.enums.UserRole;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @Builder
@@ -15,14 +14,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CreateUserDTO {
 
-    private String firstname;
-    private String lastname;
-    private String email;
-    private String phone;
-    private LocalDate birthdate;
-    private UserRole role;
-    private String password;
-    private AddressDTO address;
-    private Boolean isActive;
-
+  private String firstname;
+  private String lastname;
+  private String email;
+  private String phone;
+  private LocalDate birthdate;
+  private UserRole role;
+  private String password;
+  private AddressDTO address;
+  private Boolean isActive;
 }

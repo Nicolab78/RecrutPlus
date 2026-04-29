@@ -70,3 +70,40 @@ Run the application in development mode:
    npm run dev
 ```
 The frontend will be accessible at `http://localhost:5173`
+
+## Tests & Quality
+
+### Run tests
+```bash
+cd recrutplus-backend
+mvn test
+```
+
+### Run tests with coverage
+```bash
+cd recrutplus-backend
+mvn clean verify
+```
+The coverage report is generated in `target/site/jacoco/index.html`.
+
+### Run SonarQube locally
+```bash
+# Start SonarQube
+docker run -d --name sonarqube \
+  -p 9000:9000 \
+  -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \
+  sonarqube:community
+
+# Run analysis
+cd recrutplus-backend
+mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+  -Dsonar.projectKey=recrutplus \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.token=YOUR_TOKEN
+```
+
+### Contributing to a PR
+1. Create a branch from `dev`
+2. Develop and commit (pre-commit hooks check style automatically)
+3. Open a PR to `dev`
+4. CI runs tests automatically

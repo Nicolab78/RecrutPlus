@@ -6,15 +6,13 @@ import java.util.List;
 
 public interface IInterviewService {
 
-    InterviewDTO createInterview(CreateInterviewDTO createInterviewDTO);
+  InterviewDTO createInterview(CreateInterviewDTO createInterviewDTO);
 
-    InterviewDTO getInterviewById(Long id);
+  InterviewDTO getInterviewById(Long id);
 
-    List<InterviewDTO> getAllInterviews(InterviewStatus status);
+  List<InterviewDTO> getAllInterviews(InterviewStatus status);
 
-    List<InterviewDTO> getMyInterviews(String email);
+  List<InterviewDTO> getMyInterviews(String email);
 
-    InterviewDTO updateInterview(Long id, UpdateInterviewDTO updateInterviewDTO);
-
-
+  InterviewDTO updateInterview(Long id, UpdateInterviewDTO updateInterviewDTO);
 }

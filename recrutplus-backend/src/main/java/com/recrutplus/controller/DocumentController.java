@@ -14,25 +14,25 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class DocumentController {
 
-    private final DocumentService documentService;
+  private final DocumentService documentService;
 
-    @GetMapping("/download/{applicationId}")
-    public ResponseEntity<?> downloadCV(@PathVariable Long applicationId) {
-        try {
-            Resource resource = documentService.downloadCV(applicationId);
+  @GetMapping("/download/{applicationId}")
+  public ResponseEntity<?> downloadCV(@PathVariable Long applicationId) {
+    try {
+      Resource resource = documentService.downloadCV(applicationId);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION,
-                    "attachment; filename=cv_candidature_" + applicationId + ".pdf");
-            headers.setContentType(MediaType.APPLICATION_PDF);
+      HttpHeaders headers = new HttpHeaders();
+      headers.add(
+          HttpHeaders.CONTENT_DISPOSITION,
+          "attachment; filename=cv_candidature_" + applicationId + ".pdf");
+      headers.setContentType(MediaType.APPLICATION_PDF);
 
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(resource);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Erreur lors du téléchargement", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+      return ResponseEntity.ok().headers(headers).body(resource);
+    } catch (RuntimeException e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    } catch (Exception e) {
+      return new ResponseEntity<>(
+          "Erreur lors du téléchargement", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
 }

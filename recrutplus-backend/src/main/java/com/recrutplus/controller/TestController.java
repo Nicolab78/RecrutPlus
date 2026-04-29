@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class TestController {
 
-    private final EmailService emailService;
+  private final EmailService emailService;
 
-    @PostMapping("/email")
-    public ResponseEntity<String> sendTestEmail(@RequestParam String email) {
-        System.out.println("=== DEBUT TEST EMAIL ===");
-        try {
-            emailService.sendTestEmail(email);
-            return ResponseEntity.ok("Email de test envoyé à " + email);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erreur: " + e.getMessage());
-        }
+  @PostMapping("/email")
+  public ResponseEntity<String> sendTestEmail(@RequestParam String email) {
+    System.out.println("=== DEBUT TEST EMAIL ===");
+    try {
+      emailService.sendTestEmail(email);
+      return ResponseEntity.ok("Email de test envoyé à " + email);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body("Erreur: " + e.getMessage());
     }
+  }
 }
