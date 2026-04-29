@@ -2,7 +2,7 @@ name: Qualite
 
 on:
   push:
-    branches: [main, dev, feat/qualite]
+    branches: [main, dev]
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -22,11 +22,6 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Build, test et analyse SonarQube
+      - name: Build et test
         working-directory: recrutplus-backend
-        run: |
-          mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.projectKey=recrutplus \
-            -Dsonar.projectName='recrutplus' \
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+        run: mvn clean verify
