@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateJobOfferDTO {
 
-    private String title;
-    private ContractType contractType;
-    private Specialty specialty;
-    private String content;
-    private AddressDTO address;
-    private Double salary;
+  private String title;
+  private ContractType contractType;
+  private Specialty specialty;
+  private String content;
+  private AddressDTO address;
+  private Double salary;
 }

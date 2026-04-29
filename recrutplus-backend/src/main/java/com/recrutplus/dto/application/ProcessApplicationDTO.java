@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProcessApplicationDTO {
 
-    private ApplicationStatus status;
-    private String comment;
+  private ApplicationStatus status;
+  private String comment;
 }

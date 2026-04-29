@@ -2,9 +2,8 @@ package com.recrutplus.dto.interview;
 
 import com.recrutplus.dto.address.AddressDTO;
 import com.recrutplus.model.enums.InterviewType;
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @Setter
@@ -13,10 +12,10 @@ import java.time.LocalDateTime;
 @Builder
 public class CreateInterviewDTO {
 
-    private Long applicationId;
-    private LocalDateTime interviewDate;
-    private InterviewType type;
-    private String visioLink;
-    private AddressDTO address;
-    private String notes;
+  private Long applicationId;
+  private LocalDateTime interviewDate;
+  private InterviewType type;
+  private String visioLink;
+  private AddressDTO address;
+  private String notes;
 }

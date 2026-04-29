@@ -25,69 +25,77 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserDetailsService userDetailsService;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CorsConfigurationSource corsConfigurationSource;
+  private final CustomUserDetailsService userDetailsService;
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  private final CorsConfigurationSource corsConfigurationSource;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))
-
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/job-offers/**").permitAll()
-                        .requestMatchers("/api/applications/**").permitAll()
-                        .requestMatchers("/api/interviews/**").permitAll()
-                        .requestMatchers("/api/users/**").permitAll()
-                        .requestMatchers("/api/test/**").permitAll()
-
-                        .anyRequest().authenticated()
-                )
-
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-
-                .authenticationProvider(authenticationProvider())
-
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(401);
-                            response.setContentType("application/json");
-                            response.getWriter().write("{\"error\":\"Non autorisé\",\"message\":\"" +
-                                    authException.getMessage() + "\"}");
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    return http.csrf(AbstractHttpConfigurer::disable)
+        .cors(cors -> cors.configurationSource(corsConfigurationSource))
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers("/api/auth/**")
+                    .permitAll()
+                    .requestMatchers("/api/job-offers/**")
+                    .permitAll()
+                    .requestMatchers("/api/applications/**")
+                    .permitAll()
+                    .requestMatchers("/api/interviews/**")
+                    .permitAll()
+                    .requestMatchers("/api/users/**")
+                    .permitAll()
+                    .requestMatchers("/api/test/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authenticationProvider(authenticationProvider())
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .exceptionHandling(
+            exception ->
+                exception
+                    .authenticationEntryPoint(
+                        (request, response, authException) -> {
+                          response.setStatus(401);
+                          response.setContentType("application/json");
+                          response
+                              .getWriter()
+                              .write(
+                                  "{\"error\":\"Non autorisé\",\"message\":\""
+                                      + authException.getMessage()
+                                      + "\"}");
                         })
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setStatus(403);
-                            response.setContentType("application/json");
-                            response.getWriter().write("{\"error\":\"Accès refusé\",\"message\":\"" +
-                                    accessDeniedException.getMessage() + "\"}");
-                        })
-                )
+                    .accessDeniedHandler(
+                        (request, response, accessDeniedException) -> {
+                          response.setStatus(403);
+                          response.setContentType("application/json");
+                          response
+                              .getWriter()
+                              .write(
+                                  "{\"error\":\"Accès refusé\",\"message\":\""
+                                      + accessDeniedException.getMessage()
+                                      + "\"}");
+                        }))
+        .build();
+  }
 
-                .build();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder(12);
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
-    }
+  @Bean
+  public DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
+    authProvider.setPasswordEncoder(passwordEncoder());
+    return authProvider;
+  }
 
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+      throws Exception {
+    return config.getAuthenticationManager();
+  }
 }
