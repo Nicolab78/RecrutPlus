@@ -82,6 +82,7 @@ public class ApplicationService implements IApplicationService {
     } else {
       isNewUser = true;
       accessCode = generateAccessCode();
+      String hashedCode = passwordEncoder.encode(accessCode);
 
       user =
           User.builder()
@@ -92,8 +93,8 @@ public class ApplicationService implements IApplicationService {
               .birthdate(createApplicationDTO.getBirthdate())
               .address(mapToAddress(createApplicationDTO.getAddress()))
               .role(UserRole.CANDIDAT)
-              .password(passwordEncoder.encode(accessCode))
-              .accessCode(accessCode)
+              .password(hashedCode)
+              .accessCode(hashedCode)
               .codeExpiration(LocalDateTime.now().plusDays(30))
               .mustChangePassword(true)
               .isActive(true)
