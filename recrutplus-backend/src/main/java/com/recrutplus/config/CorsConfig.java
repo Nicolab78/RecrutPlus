@@ -20,7 +20,9 @@ public class CorsConfig {
             "http://localhost:5173",
             "http://localhost:5174",
             "http://localhost",
-            "http://localhost:80"));
+            "http://localhost:80",
+            "https://recrut-plus.vercel.app",
+            "https://*.vercel.app"));
 
     configuration.setAllowedMethods(
         Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
