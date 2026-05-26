@@ -32,6 +32,7 @@ public class User {
   @Column(nullable = false, unique = true)
   private String email;
 
+  @Size(min = 10, max = 15)
   private String phone;
 
   private LocalDate birthdate;

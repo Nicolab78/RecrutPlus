@@ -33,7 +33,7 @@ public class Application {
   private String email;
 
   @Column(nullable = false)
-  @Size(min = 10)
+  @Size(min = 10, max = 15)
   private String phone;
 
   @Column private String cvPath;
