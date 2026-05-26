@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import type { LoginDTO } from '../services/authService';
+import { Link } from 'react-router-dom';
 import './Login.css';
 
 const Login: React.FC = () => {
@@ -35,7 +36,7 @@ const Login: React.FC = () => {
       };
 
       await login(credentials);
-      
+
     } catch (err: any) {
       setError(err.response?.data?.message || err.response?.data || 'Email ou mot de passe incorrect');
     } finally {
@@ -51,7 +52,7 @@ const Login: React.FC = () => {
             Connexion
           </h2>
         </div>
-        
+
         <form className="login-form" onSubmit={handleSubmit}>
           {error && (
             <div className="error-alert">
@@ -113,9 +114,9 @@ const Login: React.FC = () => {
           <div className="login-footer">
             <p>
               Pas encore de compte ?{' '}
-              <a href="/job-offers" className="signup-link">
+              <Link to="/job-offers" className="signup-link">
                 Postulez à une offre pour en créer un
-              </a>
+              </Link>
             </p>
           </div>
         </form>
