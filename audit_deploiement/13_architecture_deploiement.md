@@ -10,8 +10,8 @@ Front-end (React/Vite) -> API REST (Spring Boot) -> MySQL (données)
 
 ## Chaîne de déploiement envisagée
 - Front-end : Vercel
-- Back-end  : Railway
-- MySQL     : Railway
+- Back-end  : Render
+- MySQL     : Aiven
 - MongoDB   : MongoDB Atlas
 
 ## Ports locaux
