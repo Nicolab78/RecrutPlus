@@ -29,6 +29,7 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -175,6 +176,7 @@ public class ApplicationService implements IApplicationService {
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('RH', 'ADMIN')")
   public ApplicationDTO getApplicationById(Long id) {
     Application application =
         applicationRepository
@@ -184,6 +186,7 @@ public class ApplicationService implements IApplicationService {
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('CANDIDAT', 'RH', 'ADMIN')")
   public List<ApplicationDTO> getMyApplications(String email) {
     return applicationRepository.findByEmail(email).stream()
         .map(this::mapToApplicationDTO)
@@ -191,6 +194,7 @@ public class ApplicationService implements IApplicationService {
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('RH', 'ADMIN')")
   public List<ApplicationDTO> getAllApplications(String status, Long jobOfferId, String email) {
     List<Application> applications;
 
@@ -209,6 +213,7 @@ public class ApplicationService implements IApplicationService {
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('RH', 'ADMIN')")
   public List<ApplicationDTO> getApplicationsByJobOffer(Long jobOfferId) {
     return applicationRepository.findByJobOfferId(jobOfferId).stream()
         .map(this::mapToApplicationDTO)
@@ -216,6 +221,7 @@ public class ApplicationService implements IApplicationService {
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('RH', 'ADMIN')")
   public List<ApplicationDTO> getApplicationsByStatus(ApplicationStatus status) {
     return applicationRepository.findByStatus(status).stream()
         .map(this::mapToApplicationDTO)
@@ -223,6 +229,7 @@ public class ApplicationService implements IApplicationService {
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('RH', 'ADMIN')")
   public ApplicationDTO processApplication(Long id, ProcessApplicationDTO processApplicationDTO) {
     Application application =
         applicationRepository
@@ -301,6 +308,7 @@ public class ApplicationService implements IApplicationService {
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('CANDIDAT', 'RH', 'ADMIN')")
   public ApplicationDTO updateApplication(Long id, UpdateApplicationDTO updateApplicationDTO) {
     Application application =
         applicationRepository

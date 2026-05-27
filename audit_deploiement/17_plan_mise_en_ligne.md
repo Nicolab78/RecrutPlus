@@ -11,7 +11,7 @@
 ### 2. Base de données MongoDB (Atlas)
 - Créer un cluster gratuit M0 sur MongoDB Atlas
 - Créer un utilisateur de base de données
-- Autoriser les IPs (0.0.0.0/0 pour Railway)
+- Autoriser les IPs (0.0.0.0/0 pour Render)
 - Récupérer l'URI de connexion
 
 ### 3. Service mail (Resend)
@@ -21,8 +21,8 @@
 - Configurer SPRING_MAIL_USERNAME=resend
 - Configurer SPRING_MAIL_PASSWORD=clé API Resend
 
-### 4. Backend (Railway)
-- Connecter le dépôt GitHub à Railway
+### 4. Backend (Render)
+- Connecter le dépôt GitHub à Render
 - Sélectionner le dossier recrutplus-backend
 - Injecter toutes les variables d'environnement
 - Vérifier le démarrage et les logs
@@ -34,8 +34,8 @@
 - Vérifier le déploiement
 
 ## Points de vérification
-- [ ] MySQL accessible depuis Railway
-- [ ] MongoDB Atlas accessible depuis Railway
+- [ ] MySQL accessible depuis Aiven
+- [ ] MongoDB Atlas accessible depuis Render
 - [ ] Backend démarré sans erreur
 - [ ] Frontend connecté au backend
 - [ ] Mails envoyés via Resend

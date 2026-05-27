@@ -18,7 +18,6 @@
 | `spring.data.mongodb.host` | localhost | Oui |
 | `spring.data.mongodb.port` | 27017 | Oui |
 | `spring.data.mongodb.database` | recrutplus | Oui |
-| `app.upload.dir` | ./uploads/cv | Oui |
 
 ## Fichier exemple
 Un fichier `application.properties.example` doit être créé à la racine
