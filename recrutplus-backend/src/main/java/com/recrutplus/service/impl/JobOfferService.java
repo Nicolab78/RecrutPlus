@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class JobOfferService implements IJobOfferService {
   private final JobOfferRepository jobOfferRepository;
 
   @Override
+  @PreAuthorize("hasAnyAuthority('RH', 'ADMIN')")
   public List<JobOfferDTO> getAllJobOffers() {
     return jobOfferRepository.findAll().stream()
         .map(this::mapToJobOfferDTO)
@@ -107,6 +109,7 @@ public class JobOfferService implements IJobOfferService {
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('RH', 'ADMIN')")
   public JobOfferDTO createJobOffer(CreateJobOfferDTO createJobOfferDTO) {
     JobOffer jobOffer =
         JobOffer.builder()
@@ -125,6 +128,7 @@ public class JobOfferService implements IJobOfferService {
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('RH', 'ADMIN')")
   public JobOfferDTO updateJobOffer(Long id, UpdateJobOfferDTO updateJobOfferDTO) {
     JobOffer jobOffer =
         jobOfferRepository

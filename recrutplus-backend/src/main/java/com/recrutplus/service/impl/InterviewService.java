@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,7 @@ public class InterviewService implements IInterviewService {
   private final EmailService emailService;
 
   @Override
+  @PreAuthorize("hasAnyAuthority('RH', 'ADMIN')")
   public InterviewDTO createInterview(CreateInterviewDTO dto) {
     Application application =
         applicationRepository
@@ -119,6 +121,7 @@ public class InterviewService implements IInterviewService {
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('RH', 'ADMIN')")
   public InterviewDTO getInterviewById(Long id) {
     Interview interview =
         interviewRepository
@@ -128,19 +131,15 @@ public class InterviewService implements IInterviewService {
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('RH', 'ADMIN')")
   public List<InterviewDTO> getAllInterviews(InterviewStatus status) {
-    List<Interview> interviews;
-
-    if (status != null) {
-      interviews = interviewRepository.findByStatus(status);
-    } else {
-      interviews = interviewRepository.findAll();
-    }
-
-    return interviews.stream().map(this::mapToInterviewDTO).collect(Collectors.toList());
+    return interviewRepository.findAll().stream()
+        .map(this::mapToInterviewDTO)
+        .collect(Collectors.toList());
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('CANDIDAT', 'RH', 'ADMIN')")
   public List<InterviewDTO> getMyInterviews(String email) {
     return interviewRepository.findByUserId(email).stream()
         .map(this::mapToInterviewDTO)
@@ -148,6 +147,7 @@ public class InterviewService implements IInterviewService {
   }
 
   @Override
+  @PreAuthorize("hasAnyAuthority('RH', 'ADMIN')")
   public InterviewDTO updateInterview(Long id, UpdateInterviewDTO dto) {
     Interview interview =
         interviewRepository
