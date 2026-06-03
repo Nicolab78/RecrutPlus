@@ -22,6 +22,7 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -191,6 +192,7 @@ class ApplicationServiceIntegrationTest {
 
   @SneakyThrows
   @Test
+  @WithMockUser(authorities = "RH")
   @DisplayName("EN_ATTENTE → EN_COURS → statut mis à jour en BDD")
   void processApplication_shouldUpdateStatus_whenEnAttenteToEnCours() {
     // GIVEN
@@ -207,6 +209,7 @@ class ApplicationServiceIntegrationTest {
 
   @SneakyThrows
   @Test
+  @WithMockUser(authorities = "RH")
   @DisplayName("ENTRETIEN_TERMINE avec entretien terminé → statut mis à jour en BDD")
   void processApplication_shouldUpdateStatus_whenEntretienTermineWithCompletedInterview() {
     // GIVEN
