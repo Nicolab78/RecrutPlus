@@ -183,7 +183,7 @@ public class UserService implements IUserService {
       user.setIsActive(updateUserDTO.getIsActive());
     }
     if (updateUserDTO.getPassword() != null && !updateUserDTO.getPassword().isEmpty()) {
-      user.setPassword((updateUserDTO.getPassword()));
+      user.setPassword(passwordEncoder.encode(updateUserDTO.getPassword()));
     }
 
     user.setUpdatedAt(LocalDateTime.now());
