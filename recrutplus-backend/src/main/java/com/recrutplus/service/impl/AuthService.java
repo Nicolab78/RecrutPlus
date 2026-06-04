@@ -43,7 +43,7 @@ public class AuthService implements IAuthService {
     if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
       isAuthenticated = true;
     } else if (user.getAccessCode() != null
-        && user.getAccessCode().equals(loginDTO.getPassword())) {
+        && passwordEncoder.matches(loginDTO.getPassword(), user.getAccessCode())) {
       if (user.getCodeExpiration() != null
           && user.getCodeExpiration().isAfter(LocalDateTime.now())) {
         isAuthenticated = true;
