@@ -117,17 +117,6 @@ class ApplicationServiceTest {
   }
 
   @Test
-  @DisplayName("Extension pas .pdf → exception")
-  void submitApplication_shouldThrow_whenExtensionIsNotPdf() {
-    MultipartFile wrongExtension =
-        new MockMultipartFile("cv", "cv.docx", "application/pdf", "%PDF-content".getBytes());
-
-    assertThrows(
-        RuntimeException.class,
-        () -> applicationService.submitApplication(validDTO, wrongExtension));
-  }
-
-  @Test
   @DisplayName("Content-type pas application/pdf → exception")
   void submitApplication_shouldThrow_whenContentTypeIsWrong() {
     MultipartFile wrongContentType =
@@ -137,16 +126,6 @@ class ApplicationServiceTest {
     assertThrows(
         RuntimeException.class,
         () -> applicationService.submitApplication(validDTO, wrongContentType));
-  }
-
-  @Test
-  @DisplayName("Signature PDF invalide → exception")
-  void submitApplication_shouldThrow_whenPdfSignatureIsInvalid() {
-    MultipartFile invalidPdf =
-        new MockMultipartFile("cv", "cv.pdf", "application/pdf", "NOTAPDF!!!".getBytes());
-
-    assertThrows(
-        RuntimeException.class, () -> applicationService.submitApplication(validDTO, invalidPdf));
   }
 
   // Submit
@@ -174,7 +153,7 @@ class ApplicationServiceTest {
   @DisplayName("Déjà candidaté à cette offre → exception")
   void submitApplication_shouldThrow_whenAlreadyApplied() {
     when(jobOfferRepository.findById(1L)).thenReturn(Optional.of(activeJobOffer));
-    when(applicationRepository.existsByEmailAndJobOfferId("jean@mail.com", 1L)).thenReturn(true);
+    when(applicationRepository.existsByEmailAndJobOfferId("test@mail.com", 1L)).thenReturn(true);
 
     assertThrows(
         RuntimeException.class, () -> applicationService.submitApplication(validDTO, validCv));

@@ -85,17 +85,18 @@ public class AuthServiceTest {
   void login_shouldThrow_whenAccessCodeIsExpired() {
     User userWithExpiredCode =
         User.builder()
-            .email("test@mail.com")
+            .email("jean@mail.com")
             .password("$2a$hashedPassword")
             .isActive(true)
-            .accessCode("ABC12345")
+            .accessCode("$2a$hashedABC12345")
             .codeExpiration(LocalDateTime.now().minusDays(1))
             .build();
 
     LoginDTO dtoWithCode = LoginDTO.builder().email("jean@mail.com").password("ABC12345").build();
 
     when(userRepository.findByEmail("jean@mail.com")).thenReturn(Optional.of(userWithExpiredCode));
-    when(passwordEncoder.matches(any(), any())).thenReturn(false);
+    when(passwordEncoder.matches("ABC12345", "$2a$hashedPassword")).thenReturn(false);
+    when(passwordEncoder.matches("ABC12345", "$2a$hashedABC12345")).thenReturn(true);
 
     assertThrows(RuntimeException.class, () -> authService.login(dtoWithCode));
   }
