@@ -57,18 +57,18 @@ const ApplicationDetailPage: React.FC = () => {
     try {
       if (!id) return;
       const allInterviews = await interviewService.getAll();
-      const candidateInterviews = allInterviews.filter(interview => 
+      const candidateInterviews = allInterviews.filter(interview =>
         interview.application.id === parseInt(id)
       );
-      
-      const completed = candidateInterviews.filter(interview => 
+
+      const completed = candidateInterviews.filter(interview =>
         interview.status === InterviewStatus.TERMINE
       ).length;
-      
-      const pending = candidateInterviews.filter(interview => 
+
+      const pending = candidateInterviews.filter(interview =>
         interview.status === InterviewStatus.PLANIFIE
       ).length;
-      
+
       setTotalInterviews(candidateInterviews.length);
       setCompletedInterviews(completed);
       setPendingInterviews(pending);
@@ -77,14 +77,12 @@ const ApplicationDetailPage: React.FC = () => {
     }
   };
 
-  // ✅ NOUVELLE FONCTION pour télécharger le CV
   const handleDownloadCV = async () => {
     try {
       if (!application) return;
-      
+
       const blob = await applicationService.downloadCV(application.id);
-      
-      // Créer un lien de téléchargement
+
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -144,7 +142,7 @@ const ApplicationDetailPage: React.FC = () => {
       };
 
       await interviewService.create(createData);
-      
+
       setShowInterviewForm(false);
       setInterviewData({
         interviewDate: '',
@@ -152,11 +150,11 @@ const ApplicationDetailPage: React.FC = () => {
         visioLink: '',
         notes: ''
       });
-      
+
       await fetchApplication();
       await fetchInterviewsCount();
-      
-      navigate('/interviews', { 
+
+      navigate('/interviews', {
         state: { message: 'Entretien créé avec succès !' }
       });
     } catch (err: any) {
@@ -174,7 +172,7 @@ const ApplicationDetailPage: React.FC = () => {
       [ApplicationStatus.EMBAUCHE]: 'status-hired',
       [ApplicationStatus.REFUSE_APRES_ENTRETIEN]: 'status-rejected-after'
     };
-    
+
     const labels = {
       [ApplicationStatus.EN_ATTENTE]: 'En attente',
       [ApplicationStatus.EN_COURS]: 'En cours',
@@ -207,7 +205,7 @@ const ApplicationDetailPage: React.FC = () => {
   };
 
   const canCreateInterview = () => {
-    return application?.status === ApplicationStatus.ACCEPTE_ENTRETIEN || 
+    return application?.status === ApplicationStatus.ACCEPTE_ENTRETIEN ||
            application?.status === ApplicationStatus.ENTRETIEN_TERMINE;
   };
 
@@ -270,12 +268,12 @@ const ApplicationDetailPage: React.FC = () => {
                 <label>Statut actuel</label>
                 <div className="status-container">{getStatusBadge(application.status)}</div>
               </div>
-              {(application.status === ApplicationStatus.ACCEPTE_ENTRETIEN || 
+              {(application.status === ApplicationStatus.ACCEPTE_ENTRETIEN ||
                 application.status === ApplicationStatus.ENTRETIEN_TERMINE) && (
                 <div className="summary-item">
                   <label>Entretiens</label>
                   <p>
-                    <span className="completed-count">{completedInterviews}</span> terminé{completedInterviews > 1 ? 's' : ''} 
+                    <span className="completed-count">{completedInterviews}</span> terminé{completedInterviews > 1 ? 's' : ''}
                     {totalInterviews > completedInterviews && (
                       <span className="total-count"> / {totalInterviews} total</span>
                     )}
@@ -325,7 +323,7 @@ const ApplicationDetailPage: React.FC = () => {
                           <span className="btn-icon">📅</span>
                           Convoquer en entretien
                         </button>
-                        
+
                         <button
                           onClick={() => {
                             setNewStatus(ApplicationStatus.REFUSE);
@@ -351,7 +349,7 @@ const ApplicationDetailPage: React.FC = () => {
                           <span className="btn-icon">✅</span>
                           Embaucher
                         </button>
-                        
+
                         <button
                           onClick={() => {
                             setNewStatus(ApplicationStatus.REFUSE_APRES_ENTRETIEN);
@@ -389,7 +387,7 @@ const ApplicationDetailPage: React.FC = () => {
                         {totalInterviews === 0 ? 'Planifier un entretien' : 'Planifier un nouvel entretien'}
                       </button>
                     )}
-                    
+
                     {totalInterviews > 0 && (
                       <div className="interview-summary">
                         <p>
@@ -414,7 +412,7 @@ const ApplicationDetailPage: React.FC = () => {
                 <span className="card-icon">👤</span>
                 Informations du candidat
               </h2>
-              
+
               <div className="info-grid">
                 <div className="info-item">
                   <label>Nom complet</label>
@@ -461,7 +459,7 @@ const ApplicationDetailPage: React.FC = () => {
                 <span className="card-icon">💼</span>
                 Offre d'emploi
               </h2>
-              
+
               <div className="job-offer-info">
                 <div className="info-item">
                   <label>Poste</label>
@@ -496,7 +494,6 @@ const ApplicationDetailPage: React.FC = () => {
               </div>
             </div>
 
-            {/* ✅ NOUVELLE SECTION CV */}
             {application.cvPath && (
               <div className="info-card">
                 <h2 className="card-title">
@@ -505,7 +502,7 @@ const ApplicationDetailPage: React.FC = () => {
                 </h2>
                 <div className="cv-section">
                   <p className="cv-info">CV téléchargé le {formatDate(application.applicationDate)}</p>
-                  <button 
+                  <button
                     onClick={handleDownloadCV}
                     className="btn-download"
                   >
@@ -534,15 +531,15 @@ const ApplicationDetailPage: React.FC = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h3>
-                  {newStatus === ApplicationStatus.ACCEPTE_ENTRETIEN ? 'Convoquer en entretien' : 
+                  {newStatus === ApplicationStatus.ACCEPTE_ENTRETIEN ? 'Convoquer en entretien' :
                    newStatus === ApplicationStatus.ENTRETIEN_TERMINE ? 'Marquer entretien terminé' :
-                   newStatus === ApplicationStatus.REFUSE ? 'Refuser la candidature' : 
+                   newStatus === ApplicationStatus.REFUSE ? 'Refuser la candidature' :
                    newStatus === ApplicationStatus.REFUSE_APRES_ENTRETIEN ? 'Refuser après entretien' :
                    newStatus === ApplicationStatus.EMBAUCHE ? 'Embaucher le candidat' :
-                   'Mettre en cours'} 
+                   'Mettre en cours'}
                 </h3>
               </div>
-              
+
               <div className="modal-form">
                 <div className="form-group">
                   <label>
@@ -556,7 +553,7 @@ const ApplicationDetailPage: React.FC = () => {
                     className="form-textarea"
                     placeholder={
                       [ApplicationStatus.REFUSE, ApplicationStatus.REFUSE_APRES_ENTRETIEN].includes(newStatus)
-                        ? "Expliquez les raisons du refus..." 
+                        ? "Expliquez les raisons du refus..."
                         : "Commentaire optionnel..."
                     }
                   />
@@ -604,7 +601,7 @@ const ApplicationDetailPage: React.FC = () => {
                   <p>{error}</p>
                 </div>
               )}
-              
+
               <div className="modal-form">
                 <div className="form-group">
                   <label>Date et heure *</label>
