@@ -28,6 +28,7 @@ public class AuthService implements IAuthService {
   private final AuthenticationManager authenticationManager;
 
   @Override
+  @Transactional(noRollbackFor = RuntimeException.class)
   public AuthResponseDTO login(LoginDTO loginDTO) {
     User user =
         userRepository
@@ -36,6 +37,17 @@ public class AuthService implements IAuthService {
 
     if (!user.getIsActive()) {
       throw new RuntimeException("Compte désactivé");
+    }
+
+    if (user.getLockTime() != null) {
+      LocalDateTime unlockTime = user.getLockTime().plusMinutes(15);
+      if (LocalDateTime.now().isBefore(unlockTime)) {
+        throw new RuntimeException("Compte temporairement bloqué. Réessayez dans 15 minutes");
+      } else {
+        user.setLockTime(null);
+        user.setFailedAttempts(0);
+        userRepository.save(user);
+      }
     }
 
     boolean isAuthenticated = false;
@@ -53,8 +65,21 @@ public class AuthService implements IAuthService {
     }
 
     if (!isAuthenticated) {
+      user.setFailedAttempts(user.getFailedAttempts() + 1);
+
+      if (user.getFailedAttempts() >= 5) {
+        user.setLockTime(LocalDateTime.now());
+        userRepository.save(user);
+        throw new RuntimeException("Compte bloqué après 5 tentatives. Réessayez dans 15 minutes");
+      }
+
+      userRepository.save(user);
       throw new RuntimeException("Email ou mot de passe/code d'accès incorrect");
     }
+
+    user.setFailedAttempts(0);
+    user.setLockTime(null);
+    userRepository.save(user);
 
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
