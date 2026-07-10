@@ -107,7 +107,7 @@ jobs:
             type=semver,pattern=v{{version}}
 
       - name: Build et push backend
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ./recrutplus-backend
           push: true
@@ -117,7 +117,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Build et push frontend
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ./recrutplus-frontend
           push: true
